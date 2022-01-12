@@ -45,7 +45,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.selector("all", [  'app' : 'jenkins-cicd-example' ]).delete()
+              openshift.selector("all", [  'app' : 'nginx-example' ]).delete()
             }
           }
         }
