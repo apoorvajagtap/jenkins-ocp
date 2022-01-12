@@ -47,7 +47,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.selector("all", [  'name' : 'kyliefc' ]).delete()
+              openshift.selector("all", [  'app' : 'kyliefc' ]).delete()
             }
           }
         }
