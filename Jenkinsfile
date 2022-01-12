@@ -21,7 +21,7 @@ pipeline {
             }
         }
     }
-    stage('cleanup') {
+    stage('changed cleanup') {
       steps {
         script {
             openshift.withCluster() {
@@ -35,7 +35,7 @@ pipeline {
         }
       }
     }
-    stage('creationnns') {
+    stage('changed creations') {
       steps {
         script {
             openshift.withCluster() {
