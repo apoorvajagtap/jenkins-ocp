@@ -45,7 +45,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.selector("all", [  'app' : 'jenkins-test' ]).delete()
+              openshift.selector("all", [  'app' : 'kyliefc' ]).delete()
             }
           }
         }
@@ -57,7 +57,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.newApp('openshift/nginx-example~https://github.com/apoorvajagtap/jenkins-cicd-ocp', "--name=jenkins-test", "--strategy=source", "--allow-missing-images").narrow('svc').expose()
+              openshift.newApp('openshift/nginx-example~https://github.com/monodot/kylie-fan-club', "--name=kyliefc", "--strategy=source", "--allow-missing-images").narrow('svc').expose()
             }
           }
         }
