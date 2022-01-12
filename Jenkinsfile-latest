@@ -3,8 +3,6 @@ pipeline {
     label 'maven'
   }
   environment {
-    // LOGIN_URL = 'https://c103-e.us-south.containers.cloud.ibm.com'
-    // LOGIN_PORT = '32110'
     PROJECT = 'jenkins'
   }   
   stages {
@@ -19,18 +17,18 @@ pipeline {
         }
       }
     }
-    stage('Maven Build') {
-      steps {
-        echo 'Build jar file'
-        script {
-          maven {
-            goals('clean')
-            goals('install')
-            properties skipTests: true
-          }
-        }
-      }
-    }
+    // stage('Maven Build') {
+    //   steps {
+    //     echo 'Build jar file'
+    //     script {
+    //       maven {
+    //         goals('clean')
+    //         goals('install')
+    //         properties skipTests: true
+    //       }
+    //     }
+    //   }
+    // }
     stage('Run Unit Tests') {
       steps {
         echo 'Run unit tests'
@@ -47,7 +45,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.selector("all", [  'app' : 'kyliefc' ]).delete()
+              openshift.selector("all", [  'app' : 'jenkins-test' ]).delete()
             }
           }
         }
@@ -59,7 +57,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.newApp('openshift/nginx-example~https://github.com/monodot/kylie-fan-club', "--name=kyliefc", "--strategy=source", "--allow-missing-images").narrow('svc').expose()
+              openshift.newApp('openshift/nginx-example~https://github.com/apoorvajagtap/jenkins-cicd-ocp', "--name=jenkins-test", "--strategy=source", "--allow-missing-images").narrow('svc').expose()
             }
           }
         }
