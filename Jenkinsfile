@@ -35,7 +35,7 @@ pipeline {
         }
       }
     }
-    stage('create') {
+    stage('creationnns') {
       steps {
         script {
             openshift.withCluster() {
