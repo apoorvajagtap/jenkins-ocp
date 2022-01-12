@@ -1,7 +1,7 @@
 apiVersion: "build.openshift.io/v1"
 kind: "BuildConfig"
 metadata:
-  name: "maven-jenkins"
+  name: "jenkins-cicd-bc"
 spec:
   source:
     git:
@@ -9,7 +9,7 @@ spec:
       ref: "main"
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfilePath: Jenkinsfile-latest
+      jenkinsfilePath: Jenkinsfile
     type: JenkinsPipeline
   triggers:
   - github:

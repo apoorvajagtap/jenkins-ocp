@@ -1,0 +1,45 @@
+pipeline {
+  agent {
+    label 'maven'
+  }
+  environment {
+    PROJECT = 'jenkins'
+  }   
+  stages {
+    stage('Preamble') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject("${env.PROJECT}") {
+              echo "Using project: ${openshift.project()}"
+            }
+          }
+        }
+      }
+    }
+    stage('Build') {
+      steps {
+        echo 'Build jar file'
+        sh 'mvn clean install'
+      }
+    }
+    stage('Run Unit Tests') {
+      steps {
+        echo 'Run unit tests'
+        sh 'mvn test'
+      }
+    }
+    stage('Delete') {
+      steps {
+        echo "Delete existing application"
+        sh 'oc delete project --field-selector=app=nginx-example'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo "Deploy application"
+        sh 'oc new-app openshift/nginx-example -p SOURCE_REPOSITORY_URL=https://github.com/apoorvajagtap/jenkins-cicd-ocp/ -p NAME=jenkins-cicd-example'
+      }
+    }
+  }
+}

@@ -1,116 +1,67 @@
-def templatePath = 'https://raw.githubusercontent.com/openshift/nodejs-ex/master/openshift/templates/nodejs-mongodb.json' 
-def templateName = 'nodejs-mongodb-example' 
 pipeline {
   agent {
-    node {
-      label 'nodejs' 
-    }
+    label 'maven'
   }
-  options {
-    timeout(time: 20, unit: 'MINUTES') 
-  }
+  environment {
+    PROJECT = 'jenkins'
+  }   
   stages {
-    stage('preamble') {
-        steps {
-            script {
-                openshift.withCluster() {
-                    openshift.withProject() {
-                        echo "Using project: ${openshift.project()}"
-                    }
-                }
-            }
-        }
-    }
-    stage('changed cleanup') {
+    stage('Preamble') {
       steps {
         script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.selector("all", [ template : templateName ]).delete() 
-                  if (openshift.selector("secrets", templateName).exists()) { 
-                    openshift.selector("secrets", templateName).delete()
-                  }
-                }
+          openshift.withCluster() {
+            openshift.withProject("${env.PROJECT}") {
+              echo "Using project: ${openshift.project()}"
             }
+          }
         }
       }
     }
-    stage('changed creations') {
+    stage('Build') {
       steps {
+        echo 'Build jar file'
         script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.newApp(templatePath) 
-                }
-            }
+          maven {
+            goals('clean')
+            goals('install')
+            properties skipTests: true
+          }
         }
       }
     }
-    stage('build') {
+    stage('Run Unit Tests') {
       steps {
+        echo 'Run unit tests'
         script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  def builds = openshift.selector("bc", templateName).related('builds')
-                  timeout(5) { 
-                    builds.untilEach(1) {
-                      return (it.object().status.phase == "Complete")
-                    }
-                  }
-                }
-            }
+          maven {
+            goals('test')
+          }
         }
       }
     }
-    stage('deploy') {
+    stage('Delete') {
       steps {
+        echo "Delete existing application"
         script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  def rm = openshift.selector("dc", templateName).rollout().latest()
-                  timeout(5) { 
-                    openshift.selector("dc", templateName).related('pods').untilEach(1) {
-                      return (it.object().status.phase == "Running")
-                    }
-                  }
-                }
+          openshift.withCluster() {
+            openshift.withProject("${env.PROJECT}") {
+              openshift.selector("all", [  'app' : 'nginx-example' ]).delete()
             }
+          }
         }
       }
     }
-    stage('tag') {
+    stage('Deploy') {
       steps {
+        echo "Deploy application"
         script {
-            openshift.withCluster() {
-                openshift.withProject() {
-                  openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
-                }
+          openshift.withCluster() {
+            openshift.withProject("${env.PROJECT}") {
+              openshift.newApp('openshift/nginx-example', '-p SOURCE_REPOSITORY_URL=https://github.com/apoorvajagtap/jenkins-ocp/', "-p NAME=jenkins-cicd-example")
             }
+          }
         }
       }
     }
   }
 }
-
-
-// pipeline {                                  // top level of the pipeline
-//     agent any                               // specify the agent, where the jenkins job is expected to run
-
-//     stages {                                // specify the tasks to be done
-//         stage('Build') {                    // Each stage focuses on one job to be done
-//             steps {
-//                 echo 'Building..'
-//             }
-//         }
-//         stage('Test') {
-//             steps {
-//                 echo 'Testing..'
-//             }
-//         }
-//         stage('Deploy') {
-//             steps {
-//                 echo 'Deploying....'
-//             }
-//         }
-//     }
-// }
