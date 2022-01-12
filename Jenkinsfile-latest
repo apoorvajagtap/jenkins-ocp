@@ -57,7 +57,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.newApp('openshift/nginx-example', '-p SOURCE_REPOSITORY_URL=https://github.com/apoorvajagtap/jenkins-cicd-ocp', "-p NAME=jenkins-cicd-example")
+              openshift.newApp('openshift/nginx-example', '-p SOURCE_REPOSITORY_URL=https://github.com/apoorvajagtap/jenkins-cicd-ocp/src', "-p NAME=jenkins-cicd-example")
             }
           }
         }
