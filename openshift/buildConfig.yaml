@@ -1,0 +1,18 @@
+apiVersion: "build.openshift.io/v1"
+kind: "BuildConfig"
+metadata:
+  name: "maven-jenkins"
+spec:
+  source:
+    git:
+      uri: "https://github.com/apoorvajagtap/jenkins-ocp"
+      ref: "main"
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: Jenkinsfile-latest
+    type: JenkinsPipeline
+  triggers:
+  - github:
+      secretReference:
+        name: mysecret
+    type: GitHub
