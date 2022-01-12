@@ -46,7 +46,7 @@ pipeline {
         }
       }
     }
-    stage('build test') {
+    stage('build test 1') {
       steps {
         script {
             openshift.withCluster() {
