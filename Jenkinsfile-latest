@@ -47,7 +47,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.selector("all", [  'app' : 'springclient' ]).delete()
+              openshift.selector("all", [  'name' : 'kyliefc' ]).delete()
             }
           }
         }
@@ -59,7 +59,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.newApp('registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.6~https://github.com/remkohdev/spring-client', "--name=springclient", "--strategy=source", "--allow-missing-images", "--build-env=\'JAVA_APP_JAR=hello.jar\'").narrow('svc').expose()
+              openshift.newApp('openshift/nginx-example~https://github.com/monodot/kylie-fan-club', "--name=kyliefc", "--strategy=source", "--allow-missing-images").narrow('svc').expose()
             }
           }
         }
