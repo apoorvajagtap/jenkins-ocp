@@ -1,5 +1,5 @@
 def templatePath = 'https://github.com/apoorvajagtap/jenkins-ocp/blob/main/nodejs-template.json' 
-def templateName = 'nodejs-mongodb-apoorva' 
+def templateName = 'modified-name' 
 pipeline {
   agent {
     node {
