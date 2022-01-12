@@ -57,7 +57,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("${env.PROJECT}") {
-              openshift.newApp('-p SOURCE_REPOSITORY_URL=https://github.com/monodot/kylie-fan-club', '--template=nginx-example', "--name=kyliefc", "--strategy=source", "--allow-missing-images").narrow('svc').expose()
+              openshift.newApp('-p SOURCE_REPOSITORY_URL=https://github.com/monodot/kylie-fan-club', '--template=nginx-example', "--name=kyliefc", "--allow-missing-images").narrow('svc').expose()
             }
           }
         }
