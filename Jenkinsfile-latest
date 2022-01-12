@@ -1,7 +1,8 @@
 pipeline {
-  agent {
-    label 'maven'
-  }
+  agent any
+  // {
+  //   label 'maven'
+  // }
   environment {
     PROJECT = 'jenkins'
   }   
@@ -17,28 +18,28 @@ pipeline {
         }
       }
     }
-    stage('Maven Build') {
-      steps {
-        echo 'Build jar file'
-        script {
-          maven {
-            goals('clean')
-            goals('install')
-            properties skipTests: true
-          }
-        }
-      }
-    }
-    stage('Run Unit Tests') {
-      steps {
-        echo 'Run unit tests'
-        script {
-          maven {
-            goals('test')
-          }
-        }
-      }
-    }
+    // stage('Maven Build') {
+    //   steps {
+    //     echo 'Build jar file'
+    //     script {
+    //       maven {
+    //         goals('clean')
+    //         goals('install')
+    //         properties skipTests: true
+    //       }
+    //     }
+    //   }
+    // }
+    // stage('Run Unit Tests') {
+    //   steps {
+    //     echo 'Run unit tests'
+    //     script {
+    //       maven {
+    //         goals('test')
+    //       }
+    //     }
+    //   }
+    // }
     stage('Delete') {
       steps {
         echo "Delete application"
