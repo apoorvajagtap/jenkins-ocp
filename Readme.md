@@ -1,3 +1,5 @@
+#### This repository is an example to configure Pipeline on Jenkins hosted on OpenShift.
+
 ### Pre-requisites:
 - OpenShift cluster deployed.
 - Jenkins instance is configured on OpenShift cluster.
@@ -23,5 +25,4 @@
 
 
 #### Note: 
-* This repository is an example code to configure Pipeline on Jenkins hosted on OCP.
 * The contents of ./src are inherrited from [monodot/kylie-fan-club](https://github.com/monodot/kylie-fan-club)
