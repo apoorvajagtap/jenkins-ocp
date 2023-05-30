@@ -3,13 +3,13 @@ pipeline {
     label 'maven'
   }
   environment {
-    PROJECT = 'jenkins'
+    PROJECT = 'jenkins1'
   }   
   stages {
     stage('Preamble') {
       steps {
         script {
-          openshift.withCluster() {
+          openshift.withCluster("forum-ui") {
             openshift.withProject("${env.PROJECT}") {
               echo "Using project: ${openshift.project()}"
             }
